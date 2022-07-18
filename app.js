@@ -1,9 +1,12 @@
+var isNewGame;
 var activePlayer;
 var scores;
 var roundScore;
 var diceDom = document.querySelector(".dice");
 initGame();
-function initGame() {
+function initGame() 
+{
+  isNewGame = true;
   activePlayer = 0;
   scores = [0, 0];
   roundScore = 0;
@@ -21,30 +24,42 @@ function initGame() {
   diceDom.style.display = "none";
 }
 document.querySelector(".btn-roll").addEventListener("click", function() {
-  var diceNumber = Math.floor(Math.random() * 6) + 1;
-  diceDom.style.display = "block";
-  diceDom.src = "dice-" + diceNumber + ".png";  
-  if (diceNumber !== 1) {
-    roundScore = roundScore + diceNumber;
-    document.getElementById("current-" + activePlayer).textContent = roundScore;
+  if (isNewGame) {
+    var diceNumber = Math.floor(Math.random() * 6) + 1;
+    diceDom.style.display = "block";
+    diceDom.src = "dice-" + diceNumber + ".png";
+    if (diceNumber !== 1) {
+      roundScore = roundScore + diceNumber;
+      document.getElementById(
+        "current-" + activePlayer
+      ).textContent = roundScore;
+    } else {
+      switchToNextPlayer();
+    }
   } else {
-    switchToNextPlayer();
+    alert("Тоглоом дууссан байна. NEW GAME товчийг дарж шинээр эхлэнэ үү");
   }
 });
 document.querySelector(".btn-hold").addEventListener("click", function() {
-  scores[activePlayer] = scores[activePlayer] + roundScore;
-  document.getElementById("score-" + activePlayer).textContent =
-    scores[activePlayer];
-  if (scores[activePlayer] >= 10) {
-    document.getElementById("name-" + activePlayer).textContent = "WINNER!!!";
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.add("winner");
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.remove("active");
+  if (isNewGame) {
+    scores[activePlayer] = scores[activePlayer] + roundScore;
+    document.getElementById("score-" + activePlayer).textContent =
+      scores[activePlayer];
+    if (scores[activePlayer] >= 10) {
+      isNewGame = false;
+
+      document.getElementById("name-" + activePlayer).textContent = "WINNER!!!";
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.add("winner");
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.remove("active");
+    } else {
+      switchToNextPlayer();
+    }
   } else {
-    switchToNextPlayer();
+    alert("Тоглоом дууссан байна. NEW GAME товчийг дарж шинээр эхлэнэ үү");
   }
 });
 function switchToNextPlayer() {
